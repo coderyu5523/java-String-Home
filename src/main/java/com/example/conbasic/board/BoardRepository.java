@@ -4,6 +4,7 @@ package com.example.conbasic.board;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigInteger;
@@ -32,7 +33,21 @@ public class BoardRepository {
 
         List<Board> boardList = query.getResultList();
         return  boardList ;
+
     }
 
 
-}
+    public BoardResponse.DetailDTO findById(int id){
+        Query query = em.createNativeQuery("select bt.id, bt.title, bt.content, bt.created_at, bt.user_id, ut.username from board_tb bt inner join user_tb ut on bt.user_id = ut.id where bt.id =?"); // 한 페이지에 3개씩 뿌림
+        query.setParameter(1,id);
+
+        JpaResultMapper rm = new JpaResultMapper();
+        BoardResponse.DetailDTO responseDTO = rm.uniqueResult(query,BoardResponse.DetailDTO.class);
+        return responseDTO ;
+
+    }
+
+
+
+    }
+
