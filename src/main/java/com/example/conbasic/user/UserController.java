@@ -1,6 +1,7 @@
 package com.example.conbasic.user;
 
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
     private final UserRepository userRepository ;
+    private final HttpSession session ;
+
 
 
     @PostMapping("/join")
@@ -30,7 +33,18 @@ public class UserController {
             return "error/400";
         }
         User user = userRepository.findByUsernameAndPaaword(requestDTO);
-        return "redirect:/";
+
+        if(user==null){
+            return "error/401";
+        }else{
+            session.setAttribute("sessionUser",user);
+            return "redirect:/";
+        }
+
+
+
+
+
     }
 
 
