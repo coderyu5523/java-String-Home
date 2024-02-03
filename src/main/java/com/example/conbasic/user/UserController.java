@@ -23,6 +23,17 @@ public class UserController {
 
         return "redirect:/loginForm";
     }
+    @PostMapping("/login")
+    public String login(UserRequest.JoinDTO requestDTO){
+
+        if(requestDTO.getUsername().length()<3){
+            return "error/400";
+        }
+        User user = userRepository.findByUsernameAndPaaword(requestDTO);
+        return "redirect:/";
+    }
+
+
 
     @GetMapping("/joinForm")
     public String joinForm(){

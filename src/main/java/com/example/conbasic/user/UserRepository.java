@@ -25,4 +25,14 @@ public class UserRepository {
 
         query.executeUpdate();
     }
+
+    public User findByUsernameAndPaaword(UserRequest.JoinDTO requestDTO) {
+        Query query = em.createNativeQuery("select * from user_tb where username = ? and password = ?",User.class);
+        query.setParameter(1,requestDTO.getUsername());
+        query.setParameter(2,requestDTO.getPassword());
+
+        User user = (User) query.getSingleResult();
+        return user ;
+
+    }
 }
