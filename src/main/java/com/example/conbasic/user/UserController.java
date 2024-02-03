@@ -2,6 +2,7 @@ package com.example.conbasic.user;
 
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ public class UserController {
 
 
 
+    @Transactional
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO requestDTO){
 
@@ -23,15 +25,15 @@ public class UserController {
             return "error/400";
         }
 
-        try{
-            userRepository.save(requestDTO);
+        User user = userRepository.findByUsername(requestDTO.getUsername());
 
-        }catch(Exception e){
+        if(user==null){
+            userRepository.save(requestDTO);
+        }else{
             return "error/400";
         }
-
-
         return "redirect:/loginForm";
+
     }
 
 
