@@ -22,10 +22,21 @@ public class UserController {
         if(requestDTO.getUsername().length()<3){
             return "error/400";
         }
-        userRepository.save(requestDTO);
+
+        try{
+            userRepository.save(requestDTO);
+
+        }catch(Exception e){
+            return "error/400";
+        }
+
 
         return "redirect:/loginForm";
     }
+
+
+
+
     @PostMapping("/login")
     public String login(UserRequest.JoinDTO requestDTO){
 
@@ -34,15 +45,15 @@ public class UserController {
         }
         User user = userRepository.findByUsernameAndPaaword(requestDTO);
 
+
         if(user==null){
             return "error/401";
         }else{
             session.setAttribute("sessionUser",user);
-            return "redirect:/";
         }
 
 
-
+        return "redirect:/";
 
 
     }
