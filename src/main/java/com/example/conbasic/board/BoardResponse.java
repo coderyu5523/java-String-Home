@@ -7,6 +7,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 public class BoardResponse {
+
     @AllArgsConstructor  // 디폴트 생성자를 때리는게 아니라 풀생성자를 때림. qmrl 은 풀생성자가 있어야됨.
     @Data
     public static class DetailDTO{

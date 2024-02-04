@@ -1,6 +1,7 @@
 package com.example.conbasic.board;
 
 
+import com.example.conbasic.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,19 @@ public class BoardController {
     public String detail(@PathVariable int id , HttpServletRequest request){
         BoardResponse.DetailDTO responseDTO = boardRepository.findById(id);
         request.setAttribute("board",responseDTO);
-        return "board/detail";
 
+        //작성자 userId 확인
+        int boardUserId = responseDTO.getUserId();
+        boolean owner = false ;
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        if(sessionUser !=null){
+            if(boardUserId==sessionUser.getId()){
+                owner = true ;
+            }
+        }
+        request.setAttribute("owner",owner);
+        return "board/detail";
     }
 
     @GetMapping("/board/saveForm")
