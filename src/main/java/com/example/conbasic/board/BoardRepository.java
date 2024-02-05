@@ -3,6 +3,7 @@ package com.example.conbasic.board;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Controller;
@@ -46,8 +47,15 @@ public class BoardRepository {
         return responseDTO ;
 
     }
-
-
+    @Transactional
+    public void saveWrite(BoardRequest.saveDTO requestDTO,int userId) {
+        Query query = em.createNativeQuery("insert into board_tb(title,content,user_id,created_at) values(?,?,?,now())");
+        query.setParameter(1, requestDTO.getTitle());
+        query.setParameter(2, requestDTO.getContent());
+        query.setParameter(3, userId);
+        query.executeUpdate();
 
     }
+    }
+
 
