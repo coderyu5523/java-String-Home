@@ -87,9 +87,26 @@ public class BoardController {
         return "board/saveForm";
     }
     @PostMapping("/board/save")
-    public String save(BoardRequest.saveDTO requestDTO){
+    public String save(BoardRequest.saveDTO requestDTO,HttpServletRequest request){
+        // 세션 접근
+        User sessionUser = (User) session.getAttribute("sessionUser");
 
-       User sessionUser = (User) session.getAttribute("sessionUser");
+        // 바디데이터가 있으면 유효성 검사 필요
+        if(requestDTO.getTitle().length()>30){
+            request.setAttribute("msg",400);
+            request.setAttribute("status","title의 길이가 30자를 초과할 수 없습니다.");
+            return "error/40x";
+        }
+
+        if(requestDTO.getContent().length()>200){
+            request.setAttribute("msg",400);
+            request.setAttribute("status","내용은 200자를 초과할 수 없습니다.");
+            return "error/40x";
+        }
+
+
+
+
         boardRepository.saveWrite(requestDTO,sessionUser.getId());
 
         return "redirect:/";
