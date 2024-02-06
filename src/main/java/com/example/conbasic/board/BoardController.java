@@ -76,6 +76,14 @@ public class BoardController {
 
     @GetMapping("/board/saveForm")
     public String saveForm() {
+        // 세션 접근
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        //인증검사
+        if(sessionUser==null){
+            return "redirect:/loginForm";
+        }
+
         return "board/saveForm";
     }
     @PostMapping("/board/save")
