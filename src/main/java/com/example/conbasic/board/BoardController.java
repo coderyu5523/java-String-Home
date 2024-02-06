@@ -93,25 +93,43 @@ public class BoardController {
 
         // 바디데이터가 있으면 유효성 검사 필요
         if(requestDTO.getTitle().length()>30){
-            request.setAttribute("msg",400);
-            request.setAttribute("status","title의 길이가 30자를 초과할 수 없습니다.");
+            request.setAttribute("status",400);
+            request.setAttribute("msg","title의 길이가 30자를 초과할 수 없습니다.");
             return "error/40x";
         }
 
         if(requestDTO.getContent().length()>200){
-            request.setAttribute("msg",400);
-            request.setAttribute("status","내용은 200자를 초과할 수 없습니다.");
+            request.setAttribute("status",400);
+            request.setAttribute("msg","내용은 200자를 초과할 수 없습니다.");
             return "error/40x";
         }
-
-
 
 
         boardRepository.saveWrite(requestDTO,sessionUser.getId());
 
         return "redirect:/";
     }
+    @PostMapping("/board/{id}/delete")
+    public String delete(@PathVariable int id, HttpServletRequest request){
+        //세션 정보 받음
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        //로그인 여부 확인 , 로그인 안되면 로그인 페이지로 리다이렉트
+        if(sessionUser==null){
+            return "redirect:/loginForm";
+        }
 
+        Board board =boardRepository.findByIdCheck(id);
+
+        if(board.getUserId()!=sessionUser.getId()){
+            request.setAttribute("status",403);
+            request.setAttribute("msg","게시글을 삭제할 권한이 없습니다.");
+            return "error/40x";
+        }
+
+        boardRepository.deleteById(id);
+
+        return "redirect:/";
+    }
 
 
 }
